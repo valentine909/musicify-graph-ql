@@ -1,5 +1,7 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ArtistsService } from './artists.service';
+import { lastValueFrom } from 'rxjs';
+import { mapId, mapIdInArray } from '../helpers';
 
 @Resolver('Artist')
 export class ArtistsResolver {
@@ -7,6 +9,13 @@ export class ArtistsResolver {
 
   @Query('artists')
   async getArtists() {
-    return this.artistsService.findAll();
+    const response = await lastValueFrom(this.artistsService.findAll());
+    return mapIdInArray(response.data.items);
+  }
+
+  @Query('artist')
+  async getArtist(@Args('id') id: string) {
+    const response = await lastValueFrom(this.artistsService.findOneById(id));
+    return mapId(response.data);
   }
 }
