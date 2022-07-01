@@ -11,7 +11,22 @@ type Artist {
     instruments: [String]
 }
 
+input ArtistInput {
+    name: String
+    firstName: String
+    secondName: String
+    middleName: String
+    birthDate: String
+    birthPlace: String
+    country: String
+}
+
 type Query {
     artists: [Artist]
     artist(id: ID!): Artist
+}
+
+type Mutation {
+    createArtist(artist: ArtistInput): Artist
+    updateArtist(id: ID!, artist: ArtistInput): Artist
 }

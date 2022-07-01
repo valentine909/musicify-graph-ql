@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { Microservice } from '../constants';
+import { Microservice, UserData } from '../constants';
+import { Artist } from '../graphql';
 
 @Injectable()
 export class ArtistsService {
@@ -14,5 +15,11 @@ export class ArtistsService {
 
   findOneById(id: string): Observable<AxiosResponse<any>> {
     return this.http.get(`${Microservice.artists}/${id}`);
+  }
+
+  createArtist(artist: Artist): Observable<AxiosResponse<any>> {
+    return this.http.post(`${Microservice.artists}`, artist, {
+      headers: { Authorization: `Bearer ${UserData.jwt}` },
+    });
   }
 }
