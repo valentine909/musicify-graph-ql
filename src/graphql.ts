@@ -8,7 +8,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface ArtistInput {
-    name?: Nullable<string>;
     firstName?: Nullable<string>;
     secondName?: Nullable<string>;
     middleName?: Nullable<string>;
@@ -31,7 +30,6 @@ export interface LoginInput {
 
 export interface Artist {
     id: string;
-    name?: Nullable<string>;
     firstName?: Nullable<string>;
     secondName?: Nullable<string>;
     middleName?: Nullable<string>;
