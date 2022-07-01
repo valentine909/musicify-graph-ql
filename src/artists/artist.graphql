@@ -21,6 +21,11 @@ input ArtistInput {
     country: String
 }
 
+type DeleteResponse {
+    acknowledged: Boolean!
+    deletedCount: Int!
+}
+
 type Query {
     artists: [Artist]
     artist(id: ID!): Artist
@@ -29,4 +34,5 @@ type Query {
 type Mutation {
     createArtist(artist: ArtistInput): Artist
     updateArtist(id: ID!, artist: ArtistInput): Artist
+    deleteArtist(id: ID!): DeleteResponse
 }

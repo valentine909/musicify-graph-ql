@@ -42,6 +42,11 @@ export interface Artist {
     instruments?: Nullable<Nullable<string>[]>;
 }
 
+export interface DeleteResponse {
+    acknowledged?: Nullable<boolean>;
+    deletedCount?: Nullable<number>;
+}
+
 export interface IQuery {
     artists(): Nullable<Nullable<Artist>[]> | Promise<Nullable<Nullable<Artist>[]>>;
     artist(id: string): Nullable<Artist> | Promise<Nullable<Artist>>;
@@ -52,6 +57,7 @@ export interface IQuery {
 export interface IMutation {
     createArtist(artist?: Nullable<ArtistInput>): Nullable<Artist> | Promise<Nullable<Artist>>;
     updateArtist(id: string, artist?: Nullable<ArtistInput>): Nullable<Artist> | Promise<Nullable<Artist>>;
+    deleteArtist(id: string): Nullable<DeleteResponse> | Promise<Nullable<DeleteResponse>>;
     register(user?: Nullable<UserInput>): Nullable<User> | Promise<Nullable<User>>;
 }
 

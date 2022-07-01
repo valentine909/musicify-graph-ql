@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { Microservice, UserData } from '../constants';
-import { ArtistInput } from '../graphql';
+import { ArtistInput, DeleteResponse } from '../graphql';
 
 @Injectable()
 export class ArtistsService {
@@ -28,6 +28,12 @@ export class ArtistsService {
     artist: ArtistInput,
   ): Observable<AxiosResponse<any>> {
     return this.http.put(`${Microservice.artists}/${id}`, artist, {
+      headers: { Authorization: `Bearer ${UserData.jwt}` },
+    });
+  }
+
+  deleteArtist(id: string): Observable<AxiosResponse<DeleteResponse>> {
+    return this.http.delete(`${Microservice.artists}/${id}`, {
       headers: { Authorization: `Bearer ${UserData.jwt}` },
     });
   }

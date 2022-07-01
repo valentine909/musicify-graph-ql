@@ -2,7 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ArtistsService } from './artists.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId, mapIdInArray } from '../helpers';
-import { Artist, ArtistInput } from '../graphql';
+import { Artist, ArtistInput, DeleteResponse } from '../graphql';
 
 @Resolver('Artist')
 export class ArtistsResolver {
@@ -37,5 +37,11 @@ export class ArtistsResolver {
       this.artistsService.updateArtist(id, artist),
     );
     return mapId(response.data);
+  }
+
+  @Mutation('deleteArtist')
+  async delete(@Args('id') id: string): Promise<DeleteResponse> {
+    const response = await lastValueFrom(this.artistsService.deleteArtist(id));
+    return response.data;
   }
 }
