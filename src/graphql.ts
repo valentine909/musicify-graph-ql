@@ -43,8 +43,8 @@ export interface Artist {
 }
 
 export interface DeleteResponse {
-    acknowledged?: Nullable<boolean>;
-    deletedCount?: Nullable<number>;
+    acknowledged: boolean;
+    deletedCount: number;
 }
 
 export interface IQuery {

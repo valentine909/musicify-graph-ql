@@ -10,8 +10,6 @@ export enum Microservice {
   login = 'http://localhost:3004/v1/users/login',
 }
 
-export const UserData = {
-  password: undefined,
-  email: undefined,
-  jwt: undefined,
+export const Config = {
+  headers: { Authorization: undefined },
 };
