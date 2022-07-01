@@ -5,10 +5,12 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ArtistsModule,
+    UsersModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       typePaths: ['./**/*.graphql'],

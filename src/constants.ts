@@ -6,4 +6,12 @@ export enum Microservice {
   genres = 'http://localhost:3001/v1/genres',
   tracks = 'http://localhost:3006/v1/tracks',
   users = 'http://localhost:3004/v1/users',
+  resister = 'http://localhost:3004/v1/users/register',
+  login = 'http://localhost:3004/v1/users/login',
 }
+
+export const UserData = {
+  password: undefined,
+  email: undefined,
+  jwt: undefined,
+};
