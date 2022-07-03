@@ -5,7 +5,8 @@
       "includes": [
         "./src/artists/*.graphql",
         "./src/genres/*.graphql",
-        "./src/users/*.graphql"
+        "./src/users/*.graphql",
+        "./src/bands/*.graphql"
       ]
     }
   },
