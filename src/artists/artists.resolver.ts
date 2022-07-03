@@ -3,14 +3,20 @@ import { ArtistsService } from './artists.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId, mapIdInArray } from '../helpers';
 import { Artist, ArtistInput, DeleteResponse } from '../graphql';
+import { PaginationSettings } from '../constants';
 
 @Resolver('Artist')
 export class ArtistsResolver {
   constructor(private readonly artistsService: ArtistsService) {}
 
   @Query('artists')
-  async getArtists() {
-    const response = await lastValueFrom(this.artistsService.findAll());
+  async getArtists(
+    @Args('limit') limit = PaginationSettings.limit,
+    @Args('offset') offset = PaginationSettings.offset,
+  ) {
+    const response = await lastValueFrom(
+      this.artistsService.findAll(limit, offset),
+    );
     return mapIdInArray(response.data.items);
   }
 

@@ -25,7 +25,7 @@ type DeleteResponse {
 }
 
 type Query {
-    artists: [Artist]
+    artists(limit: Int, offset: Int): [Artist]
     artist(id: ID!): Artist
 }
 

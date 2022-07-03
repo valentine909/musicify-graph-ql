@@ -9,8 +9,10 @@ import { ArtistInput, DeleteResponse } from '../graphql';
 export class ArtistsService {
   constructor(private readonly http: HttpService) {}
 
-  findAll(): Observable<AxiosResponse<any>> {
-    return this.http.get(Microservice.artists);
+  findAll(limit: number, offset: number): Observable<AxiosResponse<any>> {
+    return this.http.get(Microservice.artists, {
+      params: { limit: limit, offset: offset },
+    });
   }
 
   findOneById(id: string): Observable<AxiosResponse<any>> {

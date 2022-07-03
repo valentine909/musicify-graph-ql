@@ -3,14 +3,20 @@ import { GenresService } from './Genres.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId, mapIdInArray } from '../helpers';
 import { Genre, GenreInput, DeleteResponse } from '../graphql';
+import { PaginationSettings } from '../constants';
 
 @Resolver('Genre')
 export class GenresResolver {
   constructor(private readonly genresService: GenresService) {}
 
   @Query('genres')
-  async getGenres() {
-    const response = await lastValueFrom(this.genresService.findAll());
+  async getGenres(
+    @Args('limit') limit = PaginationSettings.limit,
+    @Args('offset') offset = PaginationSettings.offset,
+  ) {
+    const response = await lastValueFrom(
+      this.genresService.findAll(limit, offset),
+    );
     return mapIdInArray(response.data.items);
   }
 

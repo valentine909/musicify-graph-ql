@@ -9,8 +9,10 @@ import { GenreInput, DeleteResponse } from '../graphql';
 export class GenresService {
   constructor(private readonly http: HttpService) {}
 
-  findAll(): Observable<AxiosResponse<any>> {
-    return this.http.get(Microservice.genres);
+  findAll(limit: number, offset: number): Observable<AxiosResponse<any>> {
+    return this.http.get(Microservice.genres, {
+      params: { limit: limit, offset: offset },
+    });
   }
 
   findOneById(id: string): Observable<AxiosResponse<any>> {

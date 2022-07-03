@@ -13,3 +13,8 @@ export enum Microservice {
 export const Config = {
   headers: { Authorization: undefined },
 };
+
+export const PaginationSettings = {
+  limit: 5,
+  offset: 0,
+};
