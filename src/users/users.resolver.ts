@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UsersService } from './users.service';
+import { UsersService } from '../services/users.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId, updateConfig } from '../helpers';
 import { LoginInput, User, UserInput, JWT } from '../graphql';

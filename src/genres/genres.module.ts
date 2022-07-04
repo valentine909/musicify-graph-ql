@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { GenresResolver } from './Genres.resolver';
-import { GenresService } from './Genres.service';
 import { HttpModule } from '@nestjs/axios';
+import { ServicesModule } from '../services/services.module';
 
 @Module({
-  imports: [HttpModule],
-  providers: [GenresResolver, GenresService],
-  exports: [GenresService],
+  imports: [HttpModule, ServicesModule],
+  providers: [GenresResolver],
 })
 export class GenresModule {}

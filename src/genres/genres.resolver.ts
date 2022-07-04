@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GenresService } from './Genres.service';
+import { GenresService } from '../services/genres.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId, mapIdInArray } from '../helpers';
 import { Genre, GenreInput, DeleteResponse } from '../graphql';

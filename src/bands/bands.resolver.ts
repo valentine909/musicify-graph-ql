@@ -6,13 +6,13 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { BandsService } from './bands.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId, mapIdInArray } from '../helpers';
 import { Band, BandInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
-import { ArtistsService } from '../artists/artists.service';
-import { GenresService } from '../genres/genres.service';
+import { BandsService } from '../services/bands.service';
+import { ArtistsService } from '../services/artists.service';
+import { GenresService } from '../services/genres.service';
 
 @Resolver('Band')
 export class BandsResolver {

@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ArtistsService } from './artists.service';
+import { ArtistsService } from '../services/artists.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId, mapIdInArray } from '../helpers';
 import { Artist, ArtistInput, DeleteResponse } from '../graphql';
