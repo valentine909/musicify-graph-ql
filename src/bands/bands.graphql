@@ -22,7 +22,7 @@ input MemberInput {
 input BandInput {
     name: String
     origin: String
-    members: [ID!]
+    members: [MemberInput]
     website: String
     genres: [ID!]
 }

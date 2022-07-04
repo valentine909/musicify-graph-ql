@@ -25,7 +25,7 @@ export interface MemberInput {
 export interface BandInput {
     name?: Nullable<string>;
     origin?: Nullable<string>;
-    members?: Nullable<string[]>;
+    members?: Nullable<Nullable<MemberInput>[]>;
     website?: Nullable<string>;
     genres?: Nullable<string[]>;
 }

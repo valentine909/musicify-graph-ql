@@ -10,6 +10,16 @@ export const mapIdInArray = (array) => {
   return array.map((obj) => mapId(obj));
 };
 
+export const mapGenresId = (obj) => {
+  obj['genresIds'] = obj['genres'];
+  delete obj['genres'];
+  return obj;
+};
+
+export const mapGenresIdInArray = (array) => {
+  return array.map((obj) => mapGenresId(obj));
+};
+
 export const updateConfig = (jwt) => {
   Config.headers.Authorization = `Bearer ${jwt}`;
 };

@@ -7,7 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { lastValueFrom } from 'rxjs';
-import { mapId, mapIdInArray } from '../helpers';
+import { mapGenresId, mapId, mapIdInArray } from '../helpers';
 import { Band, BandInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
 import { BandsService } from '../services/bands.service';
@@ -41,13 +41,21 @@ export class BandsResolver {
 
   @ResolveField()
   async genres(@Parent() band) {
-    const { id } = band;
-    return lastValueFrom(this.genresService.findOneById(id));
+    const { genresIds } = band;
+    return genresIds.map(async (genreId) => {
+      const genre = await lastValueFrom(
+        this.genresService.findOneById(genreId),
+      );
+      return mapId(genre.data);
+    });
   }
 
   @Mutation('createBand')
   async create(@Args('band') band: BandInput): Promise<Band> {
-    const response = await lastValueFrom(this.bandsService.createBand(band));
+    const mappedBand = mapGenresId(band);
+    const response = await lastValueFrom(
+      this.bandsService.createBand(mappedBand),
+    );
     return mapId(response.data);
   }
 
@@ -56,8 +64,9 @@ export class BandsResolver {
     @Args('id') id: string,
     @Args('band') band: BandInput,
   ): Promise<Band> {
+    const mappedBand = mapGenresId(band);
     const response = await lastValueFrom(
-      this.bandsService.updateBand(id, band),
+      this.bandsService.updateBand(id, mappedBand),
     );
     return mapId(response.data);
   }
