@@ -10,10 +10,10 @@
 export interface AlbumInput {
     name?: Nullable<string>;
     released?: Nullable<number>;
-    artists?: Nullable<Nullable<ArtistInput>[]>;
-    bands?: Nullable<Nullable<BandInput>[]>;
-    tracks?: Nullable<Nullable<TrackInput>[]>;
-    genres?: Nullable<Nullable<GenreInput>[]>;
+    artists?: Nullable<string[]>;
+    bands?: Nullable<string[]>;
+    tracks?: Nullable<string[]>;
+    genres?: Nullable<string[]>;
     image?: Nullable<string>;
 }
 
@@ -52,11 +52,11 @@ export interface GenreInput {
 export interface TrackInput {
     title: string;
     album?: Nullable<AlbumInput>;
-    artists?: Nullable<Nullable<ArtistInput>[]>;
-    bands?: Nullable<Nullable<BandInput>[]>;
+    artists?: Nullable<string[]>;
+    bands?: Nullable<string[]>;
     duration?: Nullable<number>;
     released?: Nullable<number>;
-    genres?: Nullable<Nullable<GenreInput>[]>;
+    genres?: Nullable<string[]>;
 }
 
 export interface UserInput {
