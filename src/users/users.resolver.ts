@@ -3,7 +3,9 @@ import { UsersService } from '../services/users.service';
 import { lastValueFrom } from 'rxjs';
 import { mapId } from '../helpers';
 import { LoginInput, User, UserInput, JWT } from '../graphql';
+import { Catch } from '@nestjs/common';
 
+@Catch()
 @Resolver('User')
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}

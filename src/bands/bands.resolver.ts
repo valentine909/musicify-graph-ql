@@ -14,7 +14,9 @@ import { PaginationSettings } from '../constants';
 import { BandsService } from '../services/bands.service';
 import { ArtistsService } from '../services/artists.service';
 import { GenresService } from '../services/genres.service';
+import { Catch } from '@nestjs/common';
 
+@Catch()
 @Resolver('Band')
 export class BandsResolver {
   constructor(

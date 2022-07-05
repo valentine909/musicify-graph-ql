@@ -4,7 +4,9 @@ import { lastValueFrom } from 'rxjs';
 import { getAuthHeaders, mapId, mapIdInArray } from '../helpers';
 import { Genre, GenreInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
+import { Catch } from '@nestjs/common';
 
+@Catch()
 @Resolver('Genre')
 export class GenresResolver {
   constructor(private readonly genresService: GenresService) {}

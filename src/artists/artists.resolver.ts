@@ -13,7 +13,9 @@ import { getAuthHeaders, mapBandsId, mapId, mapIdInArray } from '../helpers';
 import { Artist, ArtistInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
 import { BandsService } from '../services/bands.service';
+import { Catch } from '@nestjs/common';
 
+@Catch()
 @Resolver('Artist')
 export class ArtistsResolver {
   constructor(
