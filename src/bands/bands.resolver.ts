@@ -41,6 +41,18 @@ export class BandsResolver {
   }
 
   @ResolveField()
+  async members(@Parent() band) {
+    const { members } = band;
+    return members.map(async (member) => {
+      const rawArtist = await lastValueFrom(
+        this.artistsService.findOneById(member.artist),
+      );
+      const artist = mapId(rawArtist.data);
+      return { ...member, artist };
+    });
+  }
+
+  @ResolveField()
   async genres(@Parent() band) {
     const { genresIds } = band;
     return genresIds.map(async (genreId) => {
