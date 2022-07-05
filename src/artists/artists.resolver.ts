@@ -1,13 +1,25 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { ArtistsService } from '../services/artists.service';
 import { lastValueFrom } from 'rxjs';
-import { getAuthHeaders, mapId, mapIdInArray } from '../helpers';
+import { getAuthHeaders, mapBandsId, mapId, mapIdInArray } from '../helpers';
 import { Artist, ArtistInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
+import { BandsService } from '../services/bands.service';
 
 @Resolver('Artist')
 export class ArtistsResolver {
-  constructor(private readonly artistsService: ArtistsService) {}
+  constructor(
+    private readonly artistsService: ArtistsService,
+    private readonly bandsService: BandsService,
+  ) {}
 
   @Query('artists')
   async getArtists(
@@ -26,6 +38,15 @@ export class ArtistsResolver {
     return mapId(response.data);
   }
 
+  @ResolveField()
+  async bands(@Parent() artist) {
+    const { bandsIds } = artist;
+    return bandsIds.map(async (bandId) => {
+      const band = await lastValueFrom(this.bandsService.findOneById(bandId));
+      return mapId(band.data);
+    });
+  }
+
   @Mutation('createArtist')
   async create(
     @Args('artist') artist: ArtistInput,
@@ -33,8 +54,9 @@ export class ArtistsResolver {
   ): Promise<Artist> {
     if (req.headers.authorization) {
       const config = getAuthHeaders(req.headers.authorization);
+      const mappedArtist = mapBandsId(artist);
       const response = await lastValueFrom(
-        this.artistsService.createArtist(artist, config),
+        this.artistsService.createArtist(mappedArtist, config),
       );
       return mapId(response.data);
     }
@@ -48,8 +70,9 @@ export class ArtistsResolver {
   ): Promise<Artist> {
     if (req.headers.authorization) {
       const config = getAuthHeaders(req.headers.authorization);
+      const mappedArtist = mapBandsId(artist);
       const response = await lastValueFrom(
-        this.artistsService.updateArtist(id, artist, config),
+        this.artistsService.updateArtist(id, mappedArtist, config),
       );
       return mapId(response.data);
     }

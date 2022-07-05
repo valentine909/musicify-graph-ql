@@ -14,6 +14,8 @@ export interface ArtistInput {
     birthDate?: Nullable<string>;
     birthPlace?: Nullable<string>;
     country?: Nullable<string>;
+    bands?: Nullable<string[]>;
+    instruments?: Nullable<Nullable<string>[]>;
 }
 
 export interface MemberInput {
@@ -57,7 +59,7 @@ export interface Artist {
     birthDate?: Nullable<string>;
     birthPlace?: Nullable<string>;
     country?: Nullable<string>;
-    bandsIds?: Nullable<Nullable<string>[]>;
+    bands?: Nullable<Nullable<Band>[]>;
     instruments?: Nullable<Nullable<string>[]>;
 }
 

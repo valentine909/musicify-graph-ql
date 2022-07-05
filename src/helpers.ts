@@ -16,8 +16,10 @@ export const mapGenresId = (obj) => {
   return obj;
 };
 
-export const mapGenresIdInArray = (array) => {
-  return array.map((obj) => mapGenresId(obj));
+export const mapBandsId = (obj) => {
+  obj['bandsIds'] = obj['bands'];
+  delete obj['bands'];
+  return obj;
 };
 
 export const getAuthHeaders = (jwt) => {
