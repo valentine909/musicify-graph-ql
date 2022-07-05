@@ -51,7 +51,7 @@ export interface GenreInput {
 
 export interface TrackInput {
     title: string;
-    album?: Nullable<AlbumInput>;
+    album?: Nullable<string>;
     artists?: Nullable<string[]>;
     bands?: Nullable<string[]>;
     duration?: Nullable<number>;

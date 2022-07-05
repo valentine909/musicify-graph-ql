@@ -22,6 +22,24 @@ export const mapBandsId = (obj) => {
   return obj;
 };
 
+export const mapArtistsId = (obj) => {
+  obj['artistsIds'] = obj['artists'];
+  delete obj['artists'];
+  return obj;
+};
+
+export const mapTracksId = (obj) => {
+  obj['trackIds'] = obj['tracks'];
+  delete obj['tracks'];
+  return obj;
+};
+
+export const mapAlbumsId = (obj) => {
+  obj['albumId'] = obj['album'];
+  delete obj['album'];
+  return obj;
+};
+
 export const getAuthHeaders = (jwt) => {
   const config = { ...Config };
   config.headers.Authorization = jwt;
