@@ -17,6 +17,8 @@ input ArtistInput {
     birthDate: String
     birthPlace: String
     country: String
+    bandsIds: [ID!]
+    instruments: [String]
 }
 
 type DeleteResponse {
