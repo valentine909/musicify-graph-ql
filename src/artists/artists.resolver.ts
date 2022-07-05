@@ -1,7 +1,7 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ArtistsService } from '../services/artists.service';
 import { lastValueFrom } from 'rxjs';
-import { mapId, mapIdInArray } from '../helpers';
+import { getAuthHeaders, mapId, mapIdInArray } from '../helpers';
 import { Artist, ArtistInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
 
@@ -27,27 +27,45 @@ export class ArtistsResolver {
   }
 
   @Mutation('createArtist')
-  async create(@Args('artist') artist: ArtistInput): Promise<Artist> {
-    const response = await lastValueFrom(
-      this.artistsService.createArtist(artist),
-    );
-    return mapId(response.data);
+  async create(
+    @Args('artist') artist: ArtistInput,
+    @Context('req') req,
+  ): Promise<Artist> {
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const response = await lastValueFrom(
+        this.artistsService.createArtist(artist, config),
+      );
+      return mapId(response.data);
+    }
   }
 
   @Mutation('updateArtist')
   async update(
     @Args('id') id: string,
     @Args('artist') artist: ArtistInput,
+    @Context('req') req,
   ): Promise<Artist> {
-    const response = await lastValueFrom(
-      this.artistsService.updateArtist(id, artist),
-    );
-    return mapId(response.data);
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const response = await lastValueFrom(
+        this.artistsService.updateArtist(id, artist, config),
+      );
+      return mapId(response.data);
+    }
   }
 
   @Mutation('deleteArtist')
-  async delete(@Args('id') id: string): Promise<DeleteResponse> {
-    const response = await lastValueFrom(this.artistsService.deleteArtist(id));
-    return response.data;
+  async delete(
+    @Args('id') id: string,
+    @Context('req') req,
+  ): Promise<DeleteResponse> {
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const response = await lastValueFrom(
+        this.artistsService.deleteArtist(id, config),
+      );
+      return response.data;
+    }
   }
 }

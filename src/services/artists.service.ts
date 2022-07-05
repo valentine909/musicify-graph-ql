@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { Microservice, Config } from '../constants';
+import { Microservice, IConfig } from '../constants';
 import { ArtistInput, DeleteResponse } from '../graphql';
 
 @Injectable()
@@ -19,18 +19,25 @@ export class ArtistsService {
     return this.http.get(`${Microservice.artists}/${id}`);
   }
 
-  createArtist(artist: ArtistInput): Observable<AxiosResponse<any>> {
-    return this.http.post(`${Microservice.artists}`, artist, Config);
+  createArtist(
+    artist: ArtistInput,
+    config: IConfig,
+  ): Observable<AxiosResponse<any>> {
+    return this.http.post(`${Microservice.artists}`, artist, config);
   }
 
   updateArtist(
     id: string,
     artist: ArtistInput,
+    config: IConfig,
   ): Observable<AxiosResponse<any>> {
-    return this.http.put(`${Microservice.artists}/${id}`, artist, Config);
+    return this.http.put(`${Microservice.artists}/${id}`, artist, config);
   }
 
-  deleteArtist(id: string): Observable<AxiosResponse<DeleteResponse>> {
-    return this.http.delete(`${Microservice.artists}/${id}`, Config);
+  deleteArtist(
+    id: string,
+    config: IConfig,
+  ): Observable<AxiosResponse<DeleteResponse>> {
+    return this.http.delete(`${Microservice.artists}/${id}`, config);
   }
 }

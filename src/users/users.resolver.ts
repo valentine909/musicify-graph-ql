@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from '../services/users.service';
 import { lastValueFrom } from 'rxjs';
-import { mapId, updateConfig } from '../helpers';
+import { mapId } from '../helpers';
 import { LoginInput, User, UserInput, JWT } from '../graphql';
 
 @Resolver('User')
@@ -17,7 +17,6 @@ export class UsersResolver {
   @Query('jwt')
   async getJWT(@Args('login') login: LoginInput): Promise<JWT> {
     const response = await lastValueFrom(this.usersService.getJWT(login));
-    updateConfig(response.data.jwt);
     return response.data;
   }
 

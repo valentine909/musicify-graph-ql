@@ -10,6 +10,12 @@ export enum Microservice {
   login = 'http://localhost:3004/v1/users/login',
 }
 
+export interface IConfig {
+  headers: {
+    Authorization: string | undefined;
+  };
+}
+
 export const Config = {
   headers: { Authorization: undefined },
 };

@@ -20,6 +20,8 @@ export const mapGenresIdInArray = (array) => {
   return array.map((obj) => mapGenresId(obj));
 };
 
-export const updateConfig = (jwt) => {
-  Config.headers.Authorization = `Bearer ${jwt}`;
+export const getAuthHeaders = (jwt) => {
+  const config = { ...Config };
+  config.headers.Authorization = jwt;
+  return config;
 };

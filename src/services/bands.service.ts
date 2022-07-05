@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { Microservice, Config } from '../constants';
+import { Microservice, IConfig } from '../constants';
 import { BandInput, DeleteResponse } from '../graphql';
 
 @Injectable()
@@ -19,15 +19,22 @@ export class BandsService {
     return this.http.get(`${Microservice.bands}/${id}`);
   }
 
-  createBand(band: BandInput): Observable<AxiosResponse<any>> {
-    return this.http.post(`${Microservice.bands}`, band, Config);
+  createBand(band: BandInput, config: IConfig): Observable<AxiosResponse<any>> {
+    return this.http.post(`${Microservice.bands}`, band, config);
   }
 
-  updateBand(id: string, band: BandInput): Observable<AxiosResponse<any>> {
-    return this.http.put(`${Microservice.bands}/${id}`, band, Config);
+  updateBand(
+    id: string,
+    band: BandInput,
+    config: IConfig,
+  ): Observable<AxiosResponse<any>> {
+    return this.http.put(`${Microservice.bands}/${id}`, band, config);
   }
 
-  deleteBand(id: string): Observable<AxiosResponse<DeleteResponse>> {
-    return this.http.delete(`${Microservice.bands}/${id}`, Config);
+  deleteBand(
+    id: string,
+    config: IConfig,
+  ): Observable<AxiosResponse<DeleteResponse>> {
+    return this.http.delete(`${Microservice.bands}/${id}`, config);
   }
 }

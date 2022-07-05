@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -7,7 +8,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { lastValueFrom } from 'rxjs';
-import { mapGenresId, mapId, mapIdInArray } from '../helpers';
+import { getAuthHeaders, mapGenresId, mapId, mapIdInArray } from '../helpers';
 import { Band, BandInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
 import { BandsService } from '../services/bands.service';
@@ -51,29 +52,47 @@ export class BandsResolver {
   }
 
   @Mutation('createBand')
-  async create(@Args('band') band: BandInput): Promise<Band> {
-    const mappedBand = mapGenresId(band);
-    const response = await lastValueFrom(
-      this.bandsService.createBand(mappedBand),
-    );
-    return mapId(response.data);
+  async create(
+    @Args('band') band: BandInput,
+    @Context('req') req,
+  ): Promise<Band> {
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const mappedBand = mapGenresId(band);
+      const response = await lastValueFrom(
+        this.bandsService.createBand(mappedBand, config),
+      );
+      return mapId(response.data);
+    }
   }
 
   @Mutation('updateBand')
   async update(
     @Args('id') id: string,
     @Args('band') band: BandInput,
+    @Context('req') req,
   ): Promise<Band> {
-    const mappedBand = mapGenresId(band);
-    const response = await lastValueFrom(
-      this.bandsService.updateBand(id, mappedBand),
-    );
-    return mapId(response.data);
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const mappedBand = mapGenresId(band);
+      const response = await lastValueFrom(
+        this.bandsService.updateBand(id, mappedBand, config),
+      );
+      return mapId(response.data);
+    }
   }
 
   @Mutation('deleteBand')
-  async delete(@Args('id') id: string): Promise<DeleteResponse> {
-    const response = await lastValueFrom(this.bandsService.deleteBand(id));
-    return response.data;
+  async delete(
+    @Args('id') id: string,
+    @Context('req') req,
+  ): Promise<DeleteResponse> {
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const response = await lastValueFrom(
+        this.bandsService.deleteBand(id, config),
+      );
+      return response.data;
+    }
   }
 }

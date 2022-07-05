@@ -1,7 +1,7 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GenresService } from '../services/genres.service';
 import { lastValueFrom } from 'rxjs';
-import { mapId, mapIdInArray } from '../helpers';
+import { getAuthHeaders, mapId, mapIdInArray } from '../helpers';
 import { Genre, GenreInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
 
@@ -27,25 +27,45 @@ export class GenresResolver {
   }
 
   @Mutation('createGenre')
-  async create(@Args('genre') genre: GenreInput): Promise<Genre> {
-    const response = await lastValueFrom(this.genresService.createGenre(genre));
-    return mapId(response.data);
+  async create(
+    @Args('genre') genre: GenreInput,
+    @Context('req') req,
+  ): Promise<Genre> {
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const response = await lastValueFrom(
+        this.genresService.createGenre(genre, config),
+      );
+      return mapId(response.data);
+    }
   }
 
   @Mutation('updateGenre')
   async update(
     @Args('id') id: string,
     @Args('genre') genre: GenreInput,
+    @Context('req') req,
   ): Promise<Genre> {
-    const response = await lastValueFrom(
-      this.genresService.updateGenre(id, genre),
-    );
-    return mapId(response.data);
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const response = await lastValueFrom(
+        this.genresService.updateGenre(id, genre, config),
+      );
+      return mapId(response.data);
+    }
   }
 
   @Mutation('deleteGenre')
-  async delete(@Args('id') id: string): Promise<DeleteResponse> {
-    const response = await lastValueFrom(this.genresService.deleteGenre(id));
-    return response.data;
+  async delete(
+    @Args('id') id: string,
+    @Context('req') req,
+  ): Promise<DeleteResponse> {
+    if (req.headers.authorization) {
+      const config = getAuthHeaders(req.headers.authorization);
+      const response = await lastValueFrom(
+        this.genresService.deleteGenre(id, config),
+      );
+      return response.data;
+    }
   }
 }
