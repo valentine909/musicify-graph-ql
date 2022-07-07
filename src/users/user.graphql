@@ -23,7 +23,7 @@ input LoginInput {
 }
 
 type Query {
-    user: User
+    user(id: ID!): User
     jwt(login: LoginInput): JWT
 }
 

@@ -11,9 +11,9 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query('user')
-  async getUser(@Args('id') id: string): Promise<number> {
+  async getUser(@Args('id') id: string): Promise<User> {
     const response = await lastValueFrom(this.usersService.getUser(id));
-    return response.status;
+    return mapId(response.data);
   }
 
   @Query('jwt')
