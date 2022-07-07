@@ -24,6 +24,7 @@ import { BandsService } from '../services/bands.service';
 import { GenresService } from '../services/genres.service';
 import { TracksService } from '../services/tracks.service';
 import { ArtistsService } from '../services/artists.service';
+import { UsersService } from '../services/users.service';
 
 @Catch()
 @Resolver('Track')
@@ -33,6 +34,7 @@ export class TracksResolver {
     private readonly bandsService: BandsService,
     private readonly genresService: GenresService,
     private readonly artistsService: ArtistsService,
+    private readonly userService: UsersService,
   ) {}
 
   @Query('tracks')
@@ -95,16 +97,15 @@ export class TracksResolver {
     @Args('track') track: TrackInput,
     @Context('req') req,
   ): Promise<Track> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedTrack = mapGenresId(
-        mapAlbumsId(mapArtistsId(mapBandsId(track))),
-      );
-      const response = await lastValueFrom(
-        this.tracksService.createTrack(mappedTrack, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedTrack = mapGenresId(
+      mapAlbumsId(mapArtistsId(mapBandsId(track))),
+    );
+    const response = await lastValueFrom(
+      this.tracksService.createTrack(mappedTrack, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('updateTrack')
@@ -113,16 +114,15 @@ export class TracksResolver {
     @Args('track') track: TrackInput,
     @Context('req') req,
   ): Promise<Track> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedTrack = mapGenresId(
-        mapAlbumsId(mapArtistsId(mapBandsId(track))),
-      );
-      const response = await lastValueFrom(
-        this.tracksService.updateTrack(id, mappedTrack, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedTrack = mapGenresId(
+      mapAlbumsId(mapArtistsId(mapBandsId(track))),
+    );
+    const response = await lastValueFrom(
+      this.tracksService.updateTrack(id, mappedTrack, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('deleteTrack')
@@ -130,12 +130,11 @@ export class TracksResolver {
     @Args('id') id: string,
     @Context('req') req,
   ): Promise<DeleteResponse> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const response = await lastValueFrom(
-        this.tracksService.deleteTrack(id, config),
-      );
-      return response.data;
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const response = await lastValueFrom(
+      this.tracksService.deleteTrack(id, config),
+    );
+    return response.data;
   }
 }

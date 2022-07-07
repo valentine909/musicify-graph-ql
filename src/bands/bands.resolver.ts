@@ -15,6 +15,7 @@ import { BandsService } from '../services/bands.service';
 import { ArtistsService } from '../services/artists.service';
 import { GenresService } from '../services/genres.service';
 import { Catch } from '@nestjs/common';
+import { UsersService } from '../services/users.service';
 
 @Catch()
 @Resolver('Band')
@@ -23,6 +24,7 @@ export class BandsResolver {
     private readonly bandsService: BandsService,
     private readonly artistsService: ArtistsService,
     private readonly genresService: GenresService,
+    private readonly userService: UsersService,
   ) {}
 
   @Query('bands')
@@ -70,14 +72,13 @@ export class BandsResolver {
     @Args('band') band: BandInput,
     @Context('req') req,
   ): Promise<Band> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedBand = mapGenresId(band);
-      const response = await lastValueFrom(
-        this.bandsService.createBand(mappedBand, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedBand = mapGenresId(band);
+    const response = await lastValueFrom(
+      this.bandsService.createBand(mappedBand, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('updateBand')
@@ -86,14 +87,13 @@ export class BandsResolver {
     @Args('band') band: BandInput,
     @Context('req') req,
   ): Promise<Band> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedBand = mapGenresId(band);
-      const response = await lastValueFrom(
-        this.bandsService.updateBand(id, mappedBand, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedBand = mapGenresId(band);
+    const response = await lastValueFrom(
+      this.bandsService.updateBand(id, mappedBand, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('deleteBand')
@@ -101,12 +101,11 @@ export class BandsResolver {
     @Args('id') id: string,
     @Context('req') req,
   ): Promise<DeleteResponse> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const response = await lastValueFrom(
-        this.bandsService.deleteBand(id, config),
-      );
-      return response.data;
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const response = await lastValueFrom(
+      this.bandsService.deleteBand(id, config),
+    );
+    return response.data;
   }
 }

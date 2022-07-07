@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { Microservice } from '../constants';
+import { IConfig, Microservice } from '../constants';
 import { User, UserInput, JWT, LoginInput } from '../graphql';
 
 @Injectable()
@@ -19,5 +19,13 @@ export class UsersService {
 
   getJWT(login: LoginInput): Observable<AxiosResponse<JWT>> {
     return this.http.post(Microservice.login, login);
+  }
+
+  async verifyToken(config: IConfig): Promise<void> {
+    try {
+      await lastValueFrom(this.http.post(Microservice.verify, null, config));
+    } catch (err) {
+      throw { message: 'Invalid token' };
+    }
   }
 }

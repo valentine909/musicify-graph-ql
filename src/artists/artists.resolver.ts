@@ -14,6 +14,7 @@ import { Artist, ArtistInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
 import { BandsService } from '../services/bands.service';
 import { Catch } from '@nestjs/common';
+import { UsersService } from '../services/users.service';
 
 @Catch()
 @Resolver('Artist')
@@ -21,6 +22,7 @@ export class ArtistsResolver {
   constructor(
     private readonly artistsService: ArtistsService,
     private readonly bandsService: BandsService,
+    private readonly userService: UsersService,
   ) {}
 
   @Query('artists')
@@ -54,14 +56,13 @@ export class ArtistsResolver {
     @Args('artist') artist: ArtistInput,
     @Context('req') req,
   ): Promise<Artist> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedArtist = mapBandsId(artist);
-      const response = await lastValueFrom(
-        this.artistsService.createArtist(mappedArtist, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedArtist = mapBandsId(artist);
+    const response = await lastValueFrom(
+      this.artistsService.createArtist(mappedArtist, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('updateArtist')
@@ -70,14 +71,13 @@ export class ArtistsResolver {
     @Args('artist') artist: ArtistInput,
     @Context('req') req,
   ): Promise<Artist> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedArtist = mapBandsId(artist);
-      const response = await lastValueFrom(
-        this.artistsService.updateArtist(id, mappedArtist, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedArtist = mapBandsId(artist);
+    const response = await lastValueFrom(
+      this.artistsService.updateArtist(id, mappedArtist, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('deleteArtist')
@@ -85,12 +85,11 @@ export class ArtistsResolver {
     @Args('id') id: string,
     @Context('req') req,
   ): Promise<DeleteResponse> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const response = await lastValueFrom(
-        this.artistsService.deleteArtist(id, config),
-      );
-      return response.data;
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const response = await lastValueFrom(
+      this.artistsService.deleteArtist(id, config),
+    );
+    return response.data;
   }
 }

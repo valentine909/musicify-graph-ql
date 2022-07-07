@@ -25,6 +25,7 @@ import { Catch } from '@nestjs/common';
 import { GenresService } from '../services/genres.service';
 import { TracksService } from '../services/tracks.service';
 import { ArtistsService } from '../services/artists.service';
+import { UsersService } from '../services/users.service';
 
 @Catch()
 @Resolver('Album')
@@ -35,6 +36,7 @@ export class AlbumsResolver {
     private readonly genresService: GenresService,
     private readonly tracksService: TracksService,
     private readonly artistsService: ArtistsService,
+    private readonly userService: UsersService,
   ) {}
 
   @Query('albums')
@@ -101,16 +103,15 @@ export class AlbumsResolver {
     @Args('album') album: AlbumInput,
     @Context('req') req,
   ): Promise<Album> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedAlbum = mapGenresId(
-        mapTracksId(mapArtistsId(mapBandsId(album))),
-      );
-      const response = await lastValueFrom(
-        this.albumsService.createAlbum(mappedAlbum, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedAlbum = mapGenresId(
+      mapTracksId(mapArtistsId(mapBandsId(album))),
+    );
+    const response = await lastValueFrom(
+      this.albumsService.createAlbum(mappedAlbum, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('updateAlbum')
@@ -119,16 +120,15 @@ export class AlbumsResolver {
     @Args('album') album: AlbumInput,
     @Context('req') req,
   ): Promise<Album> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const mappedAlbum = mapGenresId(
-        mapTracksId(mapArtistsId(mapBandsId(album))),
-      );
-      const response = await lastValueFrom(
-        this.albumsService.updateAlbum(id, mappedAlbum, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const mappedAlbum = mapGenresId(
+      mapTracksId(mapArtistsId(mapBandsId(album))),
+    );
+    const response = await lastValueFrom(
+      this.albumsService.updateAlbum(id, mappedAlbum, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('deleteAlbum')
@@ -136,12 +136,11 @@ export class AlbumsResolver {
     @Args('id') id: string,
     @Context('req') req,
   ): Promise<DeleteResponse> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const response = await lastValueFrom(
-        this.albumsService.deleteAlbum(id, config),
-      );
-      return response.data;
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const response = await lastValueFrom(
+      this.albumsService.deleteAlbum(id, config),
+    );
+    return response.data;
   }
 }

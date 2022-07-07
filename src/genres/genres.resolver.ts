@@ -5,11 +5,15 @@ import { getAuthHeaders, mapId, mapIdInArray } from '../helpers';
 import { Genre, GenreInput, DeleteResponse } from '../graphql';
 import { PaginationSettings } from '../constants';
 import { Catch } from '@nestjs/common';
+import { UsersService } from '../services/users.service';
 
 @Catch()
 @Resolver('Genre')
 export class GenresResolver {
-  constructor(private readonly genresService: GenresService) {}
+  constructor(
+    private readonly genresService: GenresService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Query('genres')
   async getGenres(
@@ -33,13 +37,12 @@ export class GenresResolver {
     @Args('genre') genre: GenreInput,
     @Context('req') req,
   ): Promise<Genre> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const response = await lastValueFrom(
-        this.genresService.createGenre(genre, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const response = await lastValueFrom(
+      this.genresService.createGenre(genre, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('updateGenre')
@@ -48,13 +51,12 @@ export class GenresResolver {
     @Args('genre') genre: GenreInput,
     @Context('req') req,
   ): Promise<Genre> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const response = await lastValueFrom(
-        this.genresService.updateGenre(id, genre, config),
-      );
-      return mapId(response.data);
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const response = await lastValueFrom(
+      this.genresService.updateGenre(id, genre, config),
+    );
+    return mapId(response.data);
   }
 
   @Mutation('deleteGenre')
@@ -62,12 +64,11 @@ export class GenresResolver {
     @Args('id') id: string,
     @Context('req') req,
   ): Promise<DeleteResponse> {
-    if (req.headers.authorization) {
-      const config = getAuthHeaders(req.headers.authorization);
-      const response = await lastValueFrom(
-        this.genresService.deleteGenre(id, config),
-      );
-      return response.data;
-    }
+    const config = getAuthHeaders(req.headers.authorization);
+    await this.userService.verifyToken(config);
+    const response = await lastValueFrom(
+      this.genresService.deleteGenre(id, config),
+    );
+    return response.data;
   }
 }
