@@ -6,7 +6,11 @@
         "./src/artists/*.graphql",
         "./src/genres/*.graphql",
         "./src/users/*.graphql",
-        "./src/bands/*.graphql"
+        "./src/bands/*.graphql",
+        "./src/user/*.graphql",
+        "./src/tracks/*.graphql",
+        "./src/favorites/*.graphql",
+        "./src/albums/*.graphql"
       ]
     }
   },
