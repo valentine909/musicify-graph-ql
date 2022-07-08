@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { catchError, Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { Microservice, IConfig } from '../constants';
+import { Microservice, IConfig, WrongInputError } from '../constants';
 import { ArtistInput, DeleteResponse } from '../graphql';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class ArtistsService {
       })
       .pipe(
         catchError(() => {
-          throw { message: 'Invalid input' };
+          throw WrongInputError;
         }),
       );
   }
@@ -24,7 +24,7 @@ export class ArtistsService {
   findOneById(id: string): Observable<AxiosResponse<any>> {
     return this.http.get(`${Microservice.artists}/${id}`).pipe(
       catchError(() => {
-        throw { message: 'Invalid input' };
+        throw WrongInputError;
       }),
     );
   }
@@ -35,7 +35,7 @@ export class ArtistsService {
   ): Observable<AxiosResponse<any>> {
     return this.http.post(`${Microservice.artists}`, artist, config).pipe(
       catchError(() => {
-        throw { message: 'Invalid input' };
+        throw WrongInputError;
       }),
     );
   }
@@ -47,7 +47,7 @@ export class ArtistsService {
   ): Observable<AxiosResponse<any>> {
     return this.http.put(`${Microservice.artists}/${id}`, artist, config).pipe(
       catchError(() => {
-        throw { message: 'Invalid input' };
+        throw WrongInputError;
       }),
     );
   }
@@ -58,7 +58,7 @@ export class ArtistsService {
   ): Observable<AxiosResponse<DeleteResponse>> {
     return this.http.delete(`${Microservice.artists}/${id}`, config).pipe(
       catchError(() => {
-        throw { message: 'Invalid input' };
+        throw WrongInputError;
       }),
     );
   }

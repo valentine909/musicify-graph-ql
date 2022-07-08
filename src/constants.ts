@@ -30,3 +30,7 @@ export const PaginationSettings = {
 export const WrongInputError = {
   message: 'Invalid input',
 };
+
+export const WrongTokenError = {
+  message: 'Invalid token',
+};
