@@ -25,6 +25,7 @@ import { GenresService } from '../services/genres.service';
 import { TracksService } from '../services/tracks.service';
 import { ArtistsService } from '../services/artists.service';
 import { UsersService } from '../services/users.service';
+import { AlbumsService } from '../services/albums.service';
 
 @Catch()
 @Resolver('Track')
@@ -35,6 +36,7 @@ export class TracksResolver {
     private readonly genresService: GenresService,
     private readonly artistsService: ArtistsService,
     private readonly userService: UsersService,
+    private readonly albumService: AlbumsService,
   ) {}
 
   @Query('tracks')
@@ -66,7 +68,7 @@ export class TracksResolver {
   @ResolveField()
   async album(@Parent() track) {
     const { albumId } = track;
-    const album = await lastValueFrom(this.bandsService.findOneById(albumId));
+    const album = await lastValueFrom(this.albumService.findOneById(albumId));
     return mapId(album.data);
   }
 
